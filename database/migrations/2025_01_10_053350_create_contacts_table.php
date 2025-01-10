@@ -10,16 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('contacts', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('company');
-            $table->string('phone');
-            $table->string('email');
-            $table->timestamps();
-        });     
-    }
+{
+    Schema::create('contacts', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('company')->nullable();
+        $table->string('phone');
+        $table->string('email');
+        $table->unsignedBigInteger('user_id');
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // FK constraint on user table
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
