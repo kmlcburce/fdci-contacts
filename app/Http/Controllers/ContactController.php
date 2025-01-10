@@ -42,12 +42,12 @@ class ContactController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
-            'company' => 'nullable|string', // Ensure that company is handled if provided
+            'company' => 'nullable|string', 
         ]);
 
         // Include user_id as the logged-in user
         $contactData = $request->all();
-        $contactData['user_id'] = Auth::id(); // Assign logged-in user's ID
+        $contactData['user_id'] = Auth::id(); 
 
         Contact::create($contactData);
 
@@ -65,12 +65,11 @@ class ContactController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
-            'company' => 'nullable|string', // Handle the company field
+            'company' => 'nullable|string', 
         ]);
 
-        // Include user_id as the logged-in user, even if updating
         $contactData = $request->all();
-        $contactData['user_id'] = Auth::id(); // Ensure the user_id is always updated correctly
+        $contactData['user_id'] = Auth::id();
 
         $contact->update($contactData);
 

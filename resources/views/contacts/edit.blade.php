@@ -30,7 +30,6 @@
                 </div>
             </div>
 
-            <!-- Hidden input to store the user_id -->
             @if(auth()->check())
                 <input type="hidden" name="user_id" value="{{ auth()->id() }}">
             @endif
