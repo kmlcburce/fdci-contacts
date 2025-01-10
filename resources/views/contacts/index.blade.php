@@ -1,43 +1,50 @@
-@extends('layouts.app')
+<x-app-layout>
+    <div class="container mx-auto px-6 py-8">
+        <!-- Heading -->
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Contact List</h1>
 
-@section('content')
-<form method="GET" action="{{ route('contacts.index') }}" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-        <button class="btn btn-primary">Search</button>
+        <!-- Search Form -->
+        <form id="search-form" class="mb-6">
+            <div class="flex space-x-4">
+                <input type="text" id="search-input" name="search" class="px-4 py-2 border border-gray-300 rounded-md w-1/3" placeholder="Search..." value="{{ request('search') }}">
+            </div>
+        </form>
+
+        <!-- Add Contact Button -->
+        <div class="mb-4">
+            <a href="{{ route('contacts.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Add Contact
+            </a>
+        </div>
+
+        <!-- Contacts Table -->
+        <div id="contacts-list" class="overflow-hidden bg-white shadow sm:rounded-lg">
+            @include('contacts.partials.contacts-table', ['contacts' => $contacts])
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-4">
+            {{ $contacts->links() }}
+        </div>
     </div>
-</form>
+</x-app-layout>
 
-<div class="container">
-    <h1>Contact List</h1>
-    <a href="{{ route('contacts.create') }}" class="btn btn-primary">Add Contact</a>
-    <table class="table mt-3">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($contacts as $contact)
-            <tr>
-                <td>{{ $contact->name }}</td>
-                <td>{{ $contact->email }}</td>
-                <td>{{ $contact->phone }}</td>
-                <td>
-                    <a href="{{ route('contacts.edit', $contact->id) }}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('contacts.destroy', $contact->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    {{ $contacts->links() }}
-</div>
-@endsection
+<script>
+    $(document).ready(function() {
+        $('#search-input').on('input', function() {
+            var searchKeyword = $(this).val();
+
+            $.ajax({
+                url: '{{ route('contacts.index') }}',
+                method: 'GET', 
+                data: {
+                    search: searchKeyword,  
+                },
+                success: function(response) {
+                    $('#contacts-list').html(response); 
+                },
+            });
+        });
+
+    });
+</script>
